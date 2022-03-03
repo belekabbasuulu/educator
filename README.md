@@ -1,7 +1,10 @@
-# EDUCATOR
+# EDUCATOR.KG
 
-python version: 3.8.9
+/listing/static/img/hero.jgp
 
+> python version: 3.8.9
+
+```
 - python3 -m venv venv
 - source venv/bin/activate
 - pip install -r requirements.txt
@@ -9,3 +12,4 @@ python version: 3.8.9
 - python manage.py createsuperuser
 - python manage.py collectstatic
 - python manage.py runserver
+```
