@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll"
+    data-image-src="{% static 'img/hero.jpg' %}">
+</div>
+<div class="row mb-4">
+
+</div>
+<div class="row tm-mb-90 tm-gallery">
+    {% for item in listings %}
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+        <figure class="effect-ming tm-video-item">
+            <img src="{{ item.image.url }}" alt="Image" class="img-fluid">
+            <figcaption class="d-flex align-items-center justify-content-center">
+                <h2>{{ item.category.title }}</h2>
+                <a href="{% url 'detail' item.id %}">View more</a>
+            </figcaption>
+        </figure>
+        <div class="d-flex justify-content-between tm-text-gray">
+            <span class="tm-text-gray-light">{{ item.title }}</span>
+            <span>{{ item.owner.first_name }} {{ item.owner.last_name }}</span>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

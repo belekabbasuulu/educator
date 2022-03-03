@@ -1,0 +1,15 @@
+*.log
+*.pot
+*.pyc
+.DS_Store
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+.vscode
+/media
+/uploads
+.env
+/venv
+/static
+/static_in_pro
+/public

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll"
+    data-image-src="{% static 'img/hero.jpg' %}">
+</div>
+
+<div class="container-fluid tm-container-content tm-mt-60">
+    <div class="row mb-4">
+        <h2 class="col-12 tm-text-primary">{{ item.category.title }}</h2>
+    </div>
+    <div class="row tm-mb-90">
+        <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
+            <img src="{{ item.image.url }}" alt="Image" class="img-fluid">
+        </div>
+        <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+            <div class="tm-bg-gray tm-video-details">
+                <p class="mb-4">
+                    {{ item.description }}
+                </p>
+                <p class="tm-text-primary"> {{ item.listing_date }}</p>
+                <div class="text-center mb-5">
+                    <a href="#" class="btn btn-primary tm-btn-big">ОСТАВИТЬ ЗАЯВКУ</a>
+                </div>
+                <div class="mb-4 d-flex flex-wrap">
+                    <div class="mr-4 mb-2">
+                        <span class="tm-text-gray-dark">Tutor: </span><span class="tm-text-primary">
+                            {{ item.owner.first_name }}
+                            {{ item.owner.last_name}}</span>
+                    </div>
+                    <div class="mr-4 mb-2">
+                        <span class="tm-text-gray-dark">Price: </span><span class="tm-text-primary">
+                            {{ item.price }}</span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="tm-text-gray-dark mb-3">Как ментор:</h3>
+                    <p>{{ item.title }}.</p>
+                </div>
+                <div>
+                    <h3 class="tm-text-gray-dark mb-3">Avocation</h3>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Cloud</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Bluesky</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Nature</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Background</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Timelapse</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Night</a>
+                    <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Real Estate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid tm-container-content tm-mt-60">
+        <div class="row mb-4">
+            <h2 class="col-6 tm-text-primary">
+                Related listings
+            </h2>
+        </div>
+
+        <div class="row tm-mb-90 tm-gallery">
+            {% for i in related_list %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 mb-5">
+                <figure class="effect-ming tm-video-item">
+                    <img src="{{ i.image.url }}" alt="Image" class="img-fluid">
+                    <figcaption class="d-flex align-items-center justify-content-center">
+                        <h2>{{ item.category.title }}</h2>
+                        <a href="{% url 'detail' i.id %}">View more</a>
+                    </figcaption>
+                </figure>
+                <div class="d-flex justify-content-between tm-text-black">
+                    <span class="tm-text-black">{{ i.price }} KGZ</span>
+                    <span>{{ i.owner.first_name }} {{ i.owner.last_name }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div> <!-- container-fluid, tm-container-content -->
+    </div>
+
+
+    {% endblock %}
