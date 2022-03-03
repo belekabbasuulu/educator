@@ -1,7 +1,5 @@
 # EDUCATOR.KG
 
-/listing/static/img/hero.jgp
-
 > python version: 3.8.9
 
 ```
