@@ -10,11 +10,16 @@ class Categories(models.Model):
 
 
 class Listing(models.Model):
+    STATUS = [
+        ('Могу научить', 'Могу научить'),
+        ('Хочу научиться', 'Хочу научиться')
+    ]
+    category = models.ForeignKey(
+        Categories, verbose_name="Категория", on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name="Название")
     owner = models.ForeignKey(
         User, verbose_name="Владелец", on_delete=models.CASCADE)
-    category = models.ForeignKey(
-        Categories, verbose_name="Категория", on_delete=models.CASCADE)
+    status = models.CharField(max_length=25, choices=STATUS, default='Могу научить')
     price = models.DecimalField(
         max_digits=9, decimal_places=2, verbose_name="Цена")
     description = models.TextField(null=True, verbose_name="Описание")
