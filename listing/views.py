@@ -1,11 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from .models import Listing, User, Categories
-from .forms import RegistrationForm
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.views import LogoutView, LoginView
-from django.http import HttpResponseRedirect
-from django.contrib import auth, messages
+from django.contrib import auth
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -14,9 +10,7 @@ class BaseView(View):
 
     def get(self, request):
         listing = Listing.objects.order_by('-listing_date')[:8]
-        context = {
-            "listing": listing
-        }
+        context = {"listing": listing}
         return render(request, 'home.html', context)
 
 
@@ -28,23 +22,26 @@ def create_view(request):
         description = request.POST['description']
         image = request.FILES['image']
         category = request.POST['category']
+        status = request.POST['status']
 
         category = Categories.objects.get(id=int(category))
-
         listing = Listing.objects.create(
             title=title,
             owner=owner,
             price=price,
             description=description,
             image=image,
-            category=category
+            category=category,
+            status = status
         )
         listing.save()
         return redirect('/')
     else:
         categories = Categories.objects.all()
+        STATUS = [i[0] for i in Listing.STATUS]
         context = {
             'categories': categories,
+            'STATUS': STATUS
         }
         return render(request, 'create.html', context)
 
@@ -83,9 +80,7 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
         user = auth.authenticate(username=username, password=password)
-
         if user is not None:
             auth.login(request, user)
             return redirect('base')
@@ -116,7 +111,6 @@ def registration(request):
 def search_view(request):
     if request.method == 'POST':
         listings = Listing.objects.all()
-
         if 'keywords' in request.POST:
             keywords = request.POST['keywords']
             if keywords:
@@ -126,24 +120,7 @@ def search_view(request):
                     Q(price__icontains=keywords) |
                     Q(owner__first_name__icontains=keywords) |
                     Q(owner__last_name__icontains=keywords)
-
                 )
-
-        if 'min_price' in request.POST:
-            min_price = request.POST['min_price']
-            if min_price:
-                listings = listings.filter(price__gte=min_price)
-
-        if 'max_price' in request.POST:
-            max_price = request.POST['max_price']
-            if max_price:
-                listings = listings.filter(price__lte=max_price)
-
-        if 'category' in request.POST:
-            category = request.POST['category']
-            if category:
-                listings = listings.filter(category__title__iexact=category)
-
         context = {
             "listings": listings
         }
@@ -154,30 +131,15 @@ def search_view(request):
 
 def all_search_view(request):
     if request.method == 'POST':
-        listings = Listing.objects.all()
-
         if 'keywords' in request.POST:
             keywords = request.POST['keywords']
-            if keywords:
-                listings = listings.filter(title__icontains=keywords)
-
-        if 'min_price' in request.POST:
-            min_price = request.POST['min_price']
-            if min_price:
-                listings = listings.filter(price__gte=min_price)
-
-        if 'max_price' in request.POST:
-            max_price = request.POST['max_price']
-            if max_price:
-                listings = listings.filter(price__lte=max_price)
-
-        if 'category' in request.POST:
-            category = request.POST['category']
-            if category:
-                listings = listings.filter(category__title__iexact=category)
-        context = {
-            "listings": listings
-        }
+            listings = Listing.objects.filter(
+                Q(title__icontains=keywords) | 
+                Q(description__icontains=keywords) | 
+                Q(status__iexact=keywords) |
+                Q(category__title__iexact=keywords)
+            )
+        context = {"listings": listings}
         return render(request, 'search.html', context)
     else:
         return render(request, 'all_tutors.html')
